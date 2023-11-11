@@ -1,25 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import { useContext, useEffect, useState } from 'react';
+import Login from './components/login/login';
+import LocalizeContext from './contexts/loacalizeContext';
+import i18n from './i18n'; // Import your i18n configuration
+
+import { Button } from 'antd';
+import i18next from './i18n';
 
 function App() {
+  const langState=useState('en');
+  const [lang, setLang] = useState('Initial Value');
+  
+  useEffect(() => {
+    // i18next.changeLanguage('ml');
+  }, [lang]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    // add a provider for i18n
+    <LocalizeContext.Provider value={langState} >
+    <div >
+      <Login/>
+      </div>
+      </LocalizeContext.Provider>
   );
 }
-
 export default App;
