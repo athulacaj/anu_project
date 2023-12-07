@@ -1,11 +1,4 @@
-import { createContext } from 'react';
-
-// const LocalizeContext = createContext(
-//     {
-//         language: 'en',
-//         setLanguage: () => {}
-//     }
-// );
+import { createContext } from "react";
 
 const LocalizeContext = createContext();
 

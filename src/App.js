@@ -5,6 +5,20 @@ import i18n from './i18n'; // Import your i18n configuration
 
 import { Button } from 'antd';
 import i18next from './i18n';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import OnBoardingPage from './components/onboarding/onboarding';
+
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <OnBoardingPage />,
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+]);
 
 function App() {
   const langState=useState('en');
@@ -18,7 +32,8 @@ function App() {
     // add a provider for i18n
     <LocalizeContext.Provider value={langState} >
     <div >
-      <Login/>
+      {/* <Login/> */}
+      <RouterProvider router={router} />
       </div>
       </LocalizeContext.Provider>
   );
