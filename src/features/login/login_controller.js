@@ -5,7 +5,7 @@ import { use } from "i18next";
 import { useNavigate } from "react-router-dom";
 
 function useLoginController() {
-  const [email, setEmail] = useState("test@test.com");
+  const [email, setEmail] = useState("test@admin.com");
   const [password, setPassword] = useState("123456");
   const [loginError, setloginError] = useState(null);
   const navigate = useNavigate();
