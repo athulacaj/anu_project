@@ -1,13 +1,14 @@
 import React from "react";
-import { Button, Checkbox, Input, Modal, Table } from "antd";
+import { Button, Dropdown, Input, Modal, Space, Table, Typography } from "antd";
 import { FullPageLoader } from "../../../common/components/loaders";
-import useParentController from "./parentController";
+import useParentController from "./driverController";
 import { hSpace, vSpace } from "../../../common/components/spacing";
-import { Typography } from "antd";
+import { DownOutlined } from "@ant-design/icons";
+import { Checkbox } from "antd";
 
 const { Title } = Typography;
 
-const ManageParents = () => {
+const ManageDrivers = () => {
   const {
     loading,
     handleAdd,
@@ -23,6 +24,26 @@ const ManageParents = () => {
 
   const { showModal, handleOk, handleCancel, isModalOpen } = modalPropeties;
 
+  const onCheckboxChange = (index) => (e) => {
+    const checked = e.target.checked;
+    const selectedRoute = routes[index];
+    console.log(checked);
+    setNewUserData((prv) => {
+      const selectedRoutes = prv.routes ?? [];
+      
+      if(checked) selectedRoutes.push(selectedRoute.name);
+      else selectedRoutes.splice(selectedRoutes.indexOf(selectedRoute.name), 1);
+      
+      
+      
+      console.log(selectedRoutes);
+      return {
+        ...prv,
+        routes: selectedRoutes,
+      };
+    });
+  };
+
   if (loading) {
     return <FullPageLoader />;
   }
@@ -34,7 +55,7 @@ const ManageParents = () => {
         overflow: "auto",
       }}
     >
-      <Title level={3}>Manage Parents</Title>
+      <Title level={3}>Manage Drivers</Title>
       {hSpace(20)}
       <Button
         onClick={handleAdd}
@@ -53,15 +74,16 @@ const ManageParents = () => {
         columns={columns}
       />
       <Modal
-        title="Basic Modal"
+        title="Add Driver"
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
       >
+        {hSpace(20)}
         {defaultColumns
           .filter((e) => e.title.toLocaleLowerCase() !== "operation")
           .map((data) => {
-            if (data.dataIndex === "route") return null;
+            if (data.dataIndex === "routes") return null;
             return (
               <div>
                 <p>{data.title} </p>
@@ -78,16 +100,15 @@ const ManageParents = () => {
               </div>
             );
           })}
-        {vSpace(10)}
+        {hSpace(20)}
+        <p>Routes</p>
         {routes.map((data, index) => {
           return (
             <Checkbox
               style={{ marginRight: 10, marginBottom: 10 }}
               key={index}
-              checked={newUserData.route === data.name}
-              onChange={(e) =>
-                setNewUserData((prv) => ({ ...prv, route: data.name }))
-              }
+              checked={(newUserData.routes ?? []).includes(data.name)}
+              onChange={onCheckboxChange(index)}
             >
               {data.name}
             </Checkbox>
@@ -97,4 +118,4 @@ const ManageParents = () => {
     </div>
   );
 };
-export default ManageParents;
+export default ManageDrivers;

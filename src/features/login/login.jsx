@@ -11,11 +11,11 @@ const Login = () => {
     const t = i18next.t;
 
 
-    // useEffect(() => {
-    //     console.log('value', t('label_login'));
-    //     // i18next.changeLanguage('ml');
-    //     console.log('value', t('label_login'));
-    // }, []);
+    useEffect(() => {
+        console.log('value', t('label_login'));
+        // i18next.changeLanguage('ml');
+        console.log('value', t('label_login'));
+    }, []);
 
 
     const { email, setEmail, password, setPassword, signInWithEmailPassword, loginError } = useLoginController();

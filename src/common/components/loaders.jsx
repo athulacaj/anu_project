@@ -6,8 +6,8 @@ function FullPageLoader() {
       align="center"
       justify="center"
       style={{
-        height: "100vh",
-        width: "100vw",
+        height: "100%",
+        width: "100%",
       }}
     >
       <Spin size="large" />

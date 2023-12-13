@@ -16,7 +16,7 @@ class OnboardRepository {
         const q = query(collection(db, "users"), where("email", "==", email));
         const querySnapshot = await getDocs(q);
         const userData = querySnapshot.docs.map((doc) => doc.data());
-        if(userData.length > 0) {
+        if(userData&&userData.length > 0) {
           resolve(userData[0]);
         }else {
           reject("No user found");
@@ -29,7 +29,7 @@ class OnboardRepository {
   }
 }
 
-OnboardRepository.getUserDataByEmail("test@admin.com")
+// OnboardRepository.getUserDataByEmail("test@admin.com")
 
 
 export default OnboardRepository;

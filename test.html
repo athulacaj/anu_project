@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Scrollspy Example</title>
+</head>
+<style>
+    body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+section {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+}
+
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #333;
+}
+
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-around;
+}
+
+li {
+    display: inline;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+    padding: 10px;
+    display: inline-block;
+}
+
+.active {
+    background-color: #666;
+}
+
+</style>
+<body>
+    <nav id="navbar">
+        <ul>
+            <li><a href="#section1">Section 1</a></li>
+            <li><a href="#section2">Section 2</a></li>
+            <li><a href="#section3">Section 3</a></li>
+            <!-- Add more sections as needed -->
+        </ul>
+    </nav>
+
+    <section id="section1">
+        <h2>Section 1</h2>
+        <!-- Content for Section 1 -->
+    </section>
+
+    <section id="section2">
+        <h2>Section 2</h2>
+        <!-- Content for Section 2 -->
+    </section>
+
+    <section id="section3">
+        <h2>Section 3</h2>
+        <!-- Content for Section 3 -->
+    </section>
+
+    <!-- Add more sections as needed -->
+
+    <script >
+        document.addEventListener("DOMContentLoaded", function () {
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('nav a');
+
+    window.addEventListener('scroll', () => {
+        let currentSection = '';
+
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+
+            if (pageYOffset >= sectionTop - sectionHeight / 3) {
+                currentSection = section.getAttribute('id');
+            }
+        });
+
+        console.log("currentSection ",currentSection);
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href').substring(1) === currentSection) {
+                link.classList.add('active');
+            }
+        });
+    });
+});
+
+    </script>
+</body>
+</html>
