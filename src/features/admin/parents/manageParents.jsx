@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Checkbox, Input, Modal, Table } from "antd";
+import { Button, Checkbox, Flex, Input, Modal, Table } from "antd";
 import { FullPageLoader } from "../../../common/components/loaders";
 import useParentController from "./parentController";
 import { hSpace, vSpace } from "../../../common/components/spacing";
@@ -19,6 +19,7 @@ const ManageParents = () => {
     setNewUserData,
     routes,
     newUserData,
+    sendAllNotification
   } = useParentController();
 
   const { showModal, handleOk, handleCancel, isModalOpen } = modalPropeties;
@@ -35,6 +36,7 @@ const ManageParents = () => {
       }}
     >
       <Title level={3}>Manage Parents</Title>
+      <Flex>
       {hSpace(20)}
       <Button
         onClick={handleAdd}
@@ -45,6 +47,17 @@ const ManageParents = () => {
       >
         Add
       </Button>
+      {hSpace(20)}
+      <Button
+        onClick={sendAllNotification}
+        type="primary"
+        style={{
+          marginBottom: 16,
+        }}
+      >
+        Send All Notification
+      </Button>
+      </Flex>
       <Table
         components={components}
         rowClassName={() => "editable-row"}
@@ -52,6 +65,7 @@ const ManageParents = () => {
         dataSource={dataSource}
         columns={columns}
       />
+
       <Modal
         title="Basic Modal"
         open={isModalOpen}
@@ -59,7 +73,7 @@ const ManageParents = () => {
         onCancel={handleCancel}
       >
         {defaultColumns
-          .filter((e) => e.title.toLocaleLowerCase() !== "operation")
+          .filter((e) => e.dataIndex.toLocaleLowerCase() !== "operation")
           .map((data) => {
             if (data.dataIndex === "route") return null;
             return (

@@ -1,23 +1,13 @@
 import React from "react";
-import {
-  Button,
-  Dropdown,
-  Flex,
-  Input,
-  Modal,
-  Space,
-  Table,
-  Typography,
-} from "antd";
+import { Button, Checkbox, Flex, Input, Modal, Table } from "antd";
 import { FullPageLoader } from "../../../common/components/loaders";
-import useParentController from "./driverController";
+import useParentController from "./parentForDiverController";
 import { hSpace, vSpace } from "../../../common/components/spacing";
-import { DownOutlined } from "@ant-design/icons";
-import { Checkbox } from "antd";
+import { Typography } from "antd";
 
 const { Title } = Typography;
 
-const ManageDrivers = () => {
+const ManageParentsForDriver = () => {
   const {
     loading,
     handleAdd,
@@ -29,28 +19,10 @@ const ManageDrivers = () => {
     setNewUserData,
     routes,
     newUserData,
-    sendAllNotification,
+    sendAllNotification
   } = useParentController();
 
   const { showModal, handleOk, handleCancel, isModalOpen } = modalPropeties;
-
-  const onCheckboxChange = (index) => (e) => {
-    const checked = e.target.checked;
-    const selectedRoute = routes[index];
-    console.log(checked);
-    setNewUserData((prv) => {
-      const selectedRoutes = prv.routes ?? [];
-
-      if (checked) selectedRoutes.push(selectedRoute.name);
-      else selectedRoutes.splice(selectedRoutes.indexOf(selectedRoute.name), 1);
-
-      console.log(selectedRoutes);
-      return {
-        ...prv,
-        routes: selectedRoutes,
-      };
-    });
-  };
 
   if (loading) {
     return <FullPageLoader />;
@@ -63,28 +35,17 @@ const ManageDrivers = () => {
         overflow: "auto",
       }}
     >
-      <Title level={3}>Manage Drivers</Title>
-      {hSpace(20)}
+      <Title level={4}>Parents</Title>
       <Flex>
-        <Button
-          onClick={handleAdd}
-          type="primary"
-          style={{
-            marginBottom: 16,
-          }}
-        >
-          Add
-        </Button>
-        {hSpace(20)}
-        <Button
-          onClick={sendAllNotification}
-          type="primary"
-          style={{
-            marginBottom: 16,
-          }}
-        >
-          Send All Notification
-        </Button>
+      <Button
+        onClick={sendAllNotification}
+        type="primary"
+        style={{
+          marginBottom: 16,
+        }}
+      >
+        Send All Notification
+      </Button>
       </Flex>
       <Table
         components={components}
@@ -93,17 +54,17 @@ const ManageDrivers = () => {
         dataSource={dataSource}
         columns={columns}
       />
+
       <Modal
-        title="Add Driver"
+        title="Basic Modal"
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
       >
-        {hSpace(20)}
         {defaultColumns
           .filter((e) => e.dataIndex.toLocaleLowerCase() !== "operation")
           .map((data) => {
-            if (data.dataIndex === "routes") return null;
+            if (data.dataIndex === "route") return null;
             return (
               <div>
                 <p>{data.title} </p>
@@ -120,15 +81,16 @@ const ManageDrivers = () => {
               </div>
             );
           })}
-        {hSpace(20)}
-        <p>Routes</p>
+        {vSpace(10)}
         {routes.map((data, index) => {
           return (
             <Checkbox
               style={{ marginRight: 10, marginBottom: 10 }}
               key={index}
-              checked={(newUserData.routes ?? []).includes(data.name)}
-              onChange={onCheckboxChange(index)}
+              checked={newUserData.route === data.name}
+              onChange={(e) =>
+                setNewUserData((prv) => ({ ...prv, route: data.name }))
+              }
             >
               {data.name}
             </Checkbox>
@@ -138,4 +100,4 @@ const ManageDrivers = () => {
     </div>
   );
 };
-export default ManageDrivers;
+export default ManageParentsForDriver;

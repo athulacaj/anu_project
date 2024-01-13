@@ -8,18 +8,23 @@ import { FullPageLoader } from "./common/components/loaders";
 import OnboardRepository from "./features/onboarding/onboard_repository";
 import CustomLayout from "./common/components/customLayout";
 import initLocalize from "./i18n";
+import i18next from "i18next";
 
 initLocalize();
 
 function App() {
-  const langState = useState("en");
-  const [lang, setLang] = useState("Initial Value");
+  const [langState,setLangState] = useState(localStorage.getItem("lang")??"en");
+  console.log("langState", localStorage.getItem("lang"));
+  // const [lang, setLang] = useState("Initial Value");
   const [userData, setUserData] = useState();
   const [authUser, setAuthUser] = useState();
 
   useEffect(() => {
-    // i18next.changeLanguage('ml');
-  }, [lang]);
+    // setLocal storage
+    localStorage.setItem("lang", langState);
+    localStorage.getItem("lang");
+    i18next.changeLanguage(langState);
+  }, [langState]);
 
   const [loading, setLoading] = useState(true);
   let varUser =null;
@@ -57,7 +62,7 @@ function App() {
 
   return (
     // add a provider for i18n
-    <LocalizeContext.Provider value={langState}>
+    <LocalizeContext.Provider value={{langState,setLangState}}>
       <UserContext.Provider value={{ userData, setUserData }}>
         <CustomLayout>
           {

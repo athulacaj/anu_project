@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { Card, Col, Divider, Row, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
 import {  } from "../../";
 import { MyColor } from "../../common/constants/theme";
 import { HomeCard } from "../../common/components/card";
+import { getFcmToken, requestFcmPermission } from "../../common/functions/firebase";
+import AdminRepository from "./adminRepository";
+import UserContext from "../../contexts/userContext";
 
 const style = { background: "#0092ff", padding: "8px 0" };
 const parentStyle = { padding: "16px" };
@@ -12,6 +15,7 @@ const parentStyle = { padding: "16px" };
 
 function AdminHomePage() {
   const navigate = useNavigate();
+  const { userData, setUserData } = useContext(UserContext);
 
   const onCardClick = (i) => () => {
     switch (i) {
@@ -30,6 +34,29 @@ function AdminHomePage() {
     }
   };
 
+
+  function allowNotification() {
+    requestFcmPermission().then(() => {
+      console.log("permission granted");
+      getFcmToken().then((token) => {
+        AdminRepository.updateToken(
+          userData.email,
+          token
+        )
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        console.log(token);
+      });
+    });
+  }
+  useEffect(() => {
+    allowNotification();
+  }, []);
+
   return (
     <div style={parentStyle}>
       <Row gutter={12}>
@@ -42,9 +69,9 @@ function AdminHomePage() {
         <Col className="gutter-row" xs={24} sm={12} md={12} lg={6} span={6}>
           <HomeCard title={"Manage routes"} onClick={onCardClick(3)} />
         </Col>
-        <Col className="gutter-row" xs={24} sm={12} md={12} lg={6} span={6}>
+        {/* <Col className="gutter-row" xs={24} sm={12} md={12} lg={6} span={6}>
           <HomeCard />
-        </Col>
+        </Col> */}
       </Row>
     </div>
   );

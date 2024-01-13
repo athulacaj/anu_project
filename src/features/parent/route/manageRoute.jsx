@@ -5,6 +5,7 @@ import { FullPageLoader } from "../../../common/components/loaders";
 import { hSpace, vSpace } from "../../../common/components/spacing";
 import { Button, Flex, Timeline } from "antd";
 import { ClockCircleOutlined, CheckCircleOutlined } from "@ant-design/icons";
+import { t } from "i18next";
 
 const RoutesInfo = ({ routes }) => (
   <Timeline
@@ -57,7 +58,13 @@ const getFirstNotVisitedStop = (stopsData) => {
 function ManageParentRoute() {
   const { routeInfo, isLoading, travelData } = useParentRouteController();
 
+  function viewOnMap() {
+    // https://www.google.com/maps/search/?api=1&query=58.698017,-152.522067
+    // open a new tab with the url
+    const path = `https://www.google.com/maps/search/?api=1&query=${travelData.lat},${travelData.long}`;
 
+    window.open(path, "_blank");
+  }
 
   if (isLoading) {
     return <FullPageLoader />;
@@ -73,6 +80,8 @@ function ManageParentRoute() {
           <div style={{ display: "flex", flexWrap: "wrap-reverse" }}>
             <div>
               <h4>{travelData.path.join(" to ")}</h4>
+              {vSpace(30)}
+              <Button onClick={viewOnMap}>{t('view_on_map')}</Button>
               {vSpace(30)}
               <TravelRouteListing travelData={travelData} />
             </div>

@@ -16,12 +16,21 @@ import ParentHome from "../parent/parentHome";
 function OnboardingPage() {
   const { userData, setUserData } = useContext(UserContext);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (userData == null) {
       navigate("/login");
     }
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
   }, []);
+
+  if (loading) {
+    return <div />;
+  }
+
   return (
     <div>
       {/* {vSpace(10)} */}

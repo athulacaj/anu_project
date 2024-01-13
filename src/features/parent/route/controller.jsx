@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import ParentRepository from "../oparentRepository";
+import ParentRepository from "../parentRepository";
 import { serverTimestamp } from "firebase/firestore";
 import UserContext from "../../../contexts/userContext";
 

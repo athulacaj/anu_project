@@ -6,6 +6,8 @@ import i18next from 'i18next';
 import { useTranslation } from 'react-i18next';
 import './login.css';
 import useLoginController from './login_controller';
+import { vSpace } from '../../common/components/spacing';
+import { FullPageLoader } from '../../common/components/loaders';
 
 const Login = () => {
     const t = i18next.t;
@@ -18,7 +20,11 @@ const Login = () => {
     }, []);
 
 
-    const { email, setEmail, password, setPassword, signInWithEmailPassword, loginError } = useLoginController();
+    const { email, setEmail, password, setPassword, signInWithEmailPassword, loginError,loading } = useLoginController();
+
+    if (loading) {
+        return <FullPageLoader />;
+    }
 
     return (
         <div className='login_container_parent'>
@@ -35,8 +41,8 @@ const Login = () => {
                         name="username"
                         rules={[
                             {
-                                required: true,
-                                message: 'Please input your username!',
+                                required: false,
+                                // message: 'Please input your username!',
                                 whitespace: true,
                             },
                         ]}
@@ -48,7 +54,7 @@ const Login = () => {
                             }}
                             value={email}
                             prefix={<UserOutlined className="site-form-item-icon" />}
-                            placeholder="Username"
+                            placeholder={t('label_email')}
                             autoComplete="off"
                             allowClear
                         />
@@ -57,9 +63,9 @@ const Login = () => {
                         name="password"
                         rules={[
                             {
-                                required: true,
+                                required: false,
                                 whitespace: true,
-                                message: 'Please input your Password!',
+                                // message: 'Please input your Password!',
                             },
                         ]}
                     >
@@ -68,12 +74,12 @@ const Login = () => {
                             value={password}
                             prefix={<LockOutlined className="site-form-item-icon" />}
                             type="password"
-                            placeholder="Password"
+                            placeholder={t('label_password')}
                             autoComplete="off"
                             allowClear
                         />
                     </Form.Item>
-                    <Form.Item>
+                    {/* <Form.Item>
                         <Form.Item name="remember" valuePropName="checked" noStyle>
                             <Checkbox className="login-form-remember">{t('label_rember_me')}</Checkbox>
                         </Form.Item>
@@ -82,14 +88,15 @@ const Login = () => {
                                 t('label_forgot_password')
                             }
                         </a>
-                    </Form.Item>
+                    </Form.Item> */}
 
                     <Form.Item>
                         {
-                            loginError && <div className="login-form-error">
-                                {loginError}
+                            loginError && <div className="login-form-error" style={{color:"red"}}>
+                                {t(loginError)}
                             </div>
                         }
+                        {vSpace(16)}
                         <Button
                             type="primary"
                             htmlType="submit"

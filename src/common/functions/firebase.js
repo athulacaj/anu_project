@@ -18,39 +18,53 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth();
-const messaging = getMessaging(app);
+const messaging = getMessaging();
 
 // fierbase messaging
 const apiKey =
   "BMYtO-5oQ-_V4jVgNBoMsOAIcMFKV8PRXfzbtFbJrXta77iE6_9aBO7HugAZmn6yfuMO7hkl93-xs3ecl0agFzI";
 
-function requestPermission() {
+function requestFcmPermission() {
   console.log("Requesting permission...");
+  return new Promise((resolve, reject) => {
   Notification.requestPermission().then((permission) => {
     if (permission === "granted") {
       console.log("Notification permission granted.");
+      resolve();
     } else {
-      console.log("Unable to get permission to notify.");
+      const msg=window.confirm("Allow notification ");
+      if(msg){
+        Notification.requestPermission().then((permission) => {
+          resolve();
+        });
+      }else{
+        console.log("Unable to get permission to notify.");
+        reject("Unable to get permission to notify.");
+      }
     }
   });
+});
 }
 
 async function getFcmToken() {
+  return new Promise(async (resolve, reject) => {
   try {
     // await messaging.requestPermission();
     // console.log('Notification permission granted.');
     const token = await getToken(messaging, { vapidKey: apiKey });
-    console.log(token);
+    resolve(token);
   } catch (error) {
-    requestPermission();
     console.log("error: ", error);
+    reject(error);
   }
+});
 }
 
-onMessage(messaging, (payload) => {
-    console.log('Message received. ', payload);
-    // ...
-  });
-getFcmToken();
 
-export { auth, db, messaging };
+
+
+
+
+
+
+export { auth, db, requestFcmPermission,getFcmToken,messaging };

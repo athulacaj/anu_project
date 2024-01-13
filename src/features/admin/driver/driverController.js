@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import UserContext from "../../../contexts/userContext";
-import { Popconfirm } from "antd";
+import { Button, Popconfirm } from "antd";
 import {
   EditableCell,
   EditableRow,
@@ -60,6 +60,10 @@ function useParentController() {
       dataIndex: "email",
     },
     {
+      title: "Phone Number",
+      dataIndex: "phoneNumber",
+    },
+    {
       title: "Routes",
       dataIndex: "routes",
       render: (_, record) => {
@@ -80,6 +84,24 @@ function useParentController() {
           >
             <a>Delete</a>
           </Popconfirm>
+        ) : null,
+    },
+    {
+      title: "Send Notification",
+      dataIndex: "operation",
+      render: (_, record) =>
+        dataSource.length >= 1 ? (
+          <Button onClick={()=>{
+            // send message using prompt
+            const message = prompt("Enter message");
+            // if pressed ok
+            console.log(record);
+            if(message){
+              AdminRepository.sendFcmNotification(record.token,"Message From Admin", message);
+            }
+          }}>
+            send
+          </Button>
         ) : null,
     },
   ];
@@ -129,6 +151,8 @@ function useParentController() {
           name: item.name,
           email: item.email,
           routes: item.routes,
+          phoneNumber: item.phoneNumber,
+          token: item.token,
         };
       });
       setDataSource(data);
@@ -165,6 +189,20 @@ function useParentController() {
     getRoutes();
   }, []);
 
+  function sendAllNotification(){
+    const message = prompt("Enter message");
+    // if pressed ok
+    if (message) {
+      dataSource.forEach((item) => {
+        AdminRepository.sendFcmNotification(
+          item.token,
+          "Message From Admin",
+          message
+        );
+      });
+    }
+  }
+
   const modalPropeties = { showModal, handleOk, handleCancel, isModalOpen };
   return {
     loading,
@@ -176,7 +214,8 @@ function useParentController() {
     setNewUserData,
     modalPropeties,
     newUserData,
-    routes
+    routes,
+    sendAllNotification
   };
 }
 

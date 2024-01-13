@@ -5,8 +5,8 @@ import { use } from "i18next";
 import { useNavigate } from "react-router-dom";
 
 
-function createUser(email) {
-  let password="123456";
+function createUser(email,password) {
+   password??="123456";
   return new Promise(async (resolve, reject) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(
@@ -22,14 +22,21 @@ function createUser(email) {
 }
 
 function useLoginController() {
-  const [email, setEmail] = useState("test@admin.com");
-  const [password, setPassword] = useState("123456");
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
   const [loginError, setloginError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   async function signInWithEmailPassword() {
     setloginError(null);
+
+    if (!validateEmail(email)) {
+      setloginError("Please enter a valid email address");
+      return;
+    }
     if (validatePassword(password)) {
+      setLoading(true);
       try {
         const user = await signInWithEmailAndPassword(auth, email, password);
         console.log("Successfully logged in ", user);
@@ -48,17 +55,26 @@ function useLoginController() {
         }
         console.error("Error logging in:", error.code);
         if(isError) alert(error.message);
+
       }
     } else {
       setloginError("Password must be at least 6 characters long");
     }
+    setLoading(false);
   }
 
-  function validatePassword() {
-    if (password && password.length < 6) {
+  function validateEmail() {
+    if (!email) {
       return false;
     }
     return true;
+  }
+
+  function validatePassword() {
+    if (password&&password.length >= 6) {
+      return true;
+    }
+    return false;
   }
 
   return {
@@ -68,6 +84,7 @@ function useLoginController() {
     setPassword,
     signInWithEmailPassword,
     loginError,
+    loading
   };
 }
 

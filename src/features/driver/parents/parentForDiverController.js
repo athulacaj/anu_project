@@ -5,7 +5,8 @@ import {
   EditableCell,
   EditableRow,
 } from "../../../common/components/tableComponents";
-import AdminRepository from "../adminRepository";
+import AdminRepository from "../../admin/adminRepository";
+import { useParams } from "react-router-dom";
 
 function useParentController() {
   const [loading, setLoading] = useState(true);
@@ -15,6 +16,8 @@ function useParentController() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newUserData, setNewUserData] = useState({});
   const [routes, setRoutes] = useState([]);
+  const { route } = useParams();
+
 
   function getRoutes() {
     AdminRepository.getRoutes()
@@ -57,7 +60,7 @@ function useParentController() {
       dataIndex: "email",
     },
     {
-      title: "Student Name",
+      title: "Studet Name",
       dataIndex: "studentName",
     },
     {
@@ -67,19 +70,6 @@ function useParentController() {
     {
       title: "Route",
       dataIndex: "route",
-    },
-    {
-      title: "Operation",
-      dataIndex: "operation",
-      render: (_, record) =>
-        dataSource.length >= 1 ? (
-          <Popconfirm
-            title="Sure to delete?"
-            onConfirm={() => handleDelete(record.key)}
-          >
-            <a>Delete</a>
-          </Popconfirm>
-        ) : null,
     },
     {
       title: "Send Notification",
@@ -95,7 +85,7 @@ function useParentController() {
               if (message) {
                 AdminRepository.sendFcmNotification(
                   record.token,
-                  "Message From Admin",
+                  "Message From Driver",
                   message
                 );
               }
@@ -160,7 +150,7 @@ function sendAllNotification(){
 
   useEffect(() => {
     getRoutes();
-    AdminRepository.getAllParents(userData.schoolId).then((res) => {
+    AdminRepository.getAllParentsWithRoute(userData.schoolId,route).then((res) => {
       console.log(res);
       const data = res.map((item, index) => {
         return {
